@@ -5,8 +5,15 @@ using Microsoft.Extensions.Configuration;
 
 namespace ADXETools
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
             try
@@ -20,6 +27,11 @@ namespace ADXETools
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
         .ConfigureAppConfiguration((context, builder) =>

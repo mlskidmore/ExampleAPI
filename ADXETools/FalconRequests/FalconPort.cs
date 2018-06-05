@@ -19,6 +19,9 @@ namespace ADXETools.FalconRequests
         Task<string> SubmitFalconRequest(string requestData);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class FalconPort : IFalconPort
     {
         private readonly HttpClient httpClient = new HttpClient();

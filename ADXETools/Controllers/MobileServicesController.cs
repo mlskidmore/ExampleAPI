@@ -3,35 +3,37 @@ using System.Threading.Tasks;
 using ADXETools.FalconRequests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Examples;
 
 namespace ADXETools.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Produces("application/xml")]
     public class MobileServicesController : Controller
     {
-        //TO BE ADDED - Deserialize the XML Output so it displays correctly.
-        //TO BE ADDED - Separate Controller for every service, use Falcon Base URL and added the appropriate *.asp file to it when making Falcon calls.
         private readonly IFalconPort falconPort;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="claimsAdapter"></param>
-        /// <param name="logger"></param>
+        /// <param name="falconPort"></param>
         public MobileServicesController(IFalconPort falconPort)
         {
             this.falconPort = falconPort;
         }
 
         /// <summary>
-        /// Saves the attachment to the ADXE claim
+        /// Looks up the Vehicle Details
         /// </summary>
-        /// <param name="serviceInput"></param>
+        /// <param name="xmlInput"></param>
         /// <returns></returns>
         /// <response code = "201">Returns saved attachment info</response>
         /// <response code = "400">Invalid input parameters</response>
         /// <response code = "401">Active authorization is missing</response>
-        [HttpPost("MobileVINDecode")]
+        //[SwaggerRequestExample(typeof(string),typeof(OONLookupVehicleExample))]
+        [HttpPost("OONVehicleLookup")]
         [ProducesResponseType(typeof(string), 201)]
         public async Task<IActionResult> PostAsync([FromBody]string xmlInput)
         {
