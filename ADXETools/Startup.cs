@@ -67,7 +67,7 @@ namespace ADXETools
             });
 
             services.TryAddSingleton<IEnvironmentConfiguration>(new EnvironmentConfiguration(Configuration));
-            services.TryAddSingleton<HttpClient> ();
+            services.TryAddSingleton<HttpClient>();
             services.TryAddSingleton<IFalconPort, FalconPort>();
         }
 
@@ -102,6 +102,6 @@ namespace ADXETools
                 Console.WriteLine(ex.Message);
                 throw;
             }
-}
+        }
     }
 }

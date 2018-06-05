@@ -52,8 +52,6 @@ namespace ADXETools.Controllers
                 string msg = string.Format("Processing error <{0}> received for PostAttachments request <{1}>.  Verify input request data.", ex.Message, xmlInput);
                 return BadRequest(msg);
             }
-
-            
         }
 
         //// PUT api/values/5

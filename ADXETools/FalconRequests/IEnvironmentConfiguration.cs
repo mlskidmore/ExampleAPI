@@ -23,8 +23,7 @@ namespace ADXETools.FalconRequests
         /// 
         /// </summary>
         string FalconWebApiUrl { get; }
-
-    }
+     }
 
     /// <summary>
     /// 
@@ -60,7 +59,5 @@ namespace ADXETools.FalconRequests
         /// 
         /// </summary>
         public string FalconWebApiUrl { get; }
-
-
-    }
+      }
 }

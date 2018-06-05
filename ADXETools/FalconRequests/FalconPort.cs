@@ -37,8 +37,7 @@ namespace ADXETools.FalconRequests
         {
             this.httpClient = httpClient;
             this.environmentalConfiguration = environmentalConfiguration;
-            
-        }        
+        }
 
         /// <summary>
         /// 
@@ -61,8 +60,6 @@ namespace ADXETools.FalconRequests
             {
                 throw new Exception(ex.Message, ex);
             }
-
-
         }
         #endregion Public Methods
 
@@ -93,7 +90,6 @@ namespace ADXETools.FalconRequests
                 string err = string.Format("Status code:{0}, request message: {1}", requestResponse.StatusCode.ToString(), requestResponse.RequestMessage.ToString());
                 throw new Exception(err);
             }
-
         }
 
         private void CheckFalconResponse(XContainer xDoc)
@@ -127,4 +123,3 @@ namespace ADXETools.FalconRequests
         #endregion Private Methods
     }
 }
-
