@@ -14,9 +14,10 @@ namespace ADXETools.FalconRequests
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="aspPage"></param>
         /// <param name="requestData"></param>
         /// <returns></returns>
-        Task<string> SubmitFalconRequest(string requestData);
+        Task<string> SubmitFalconRequest(string aspPage, string requestData);
     }
 
     /// <summary>
@@ -42,16 +43,17 @@ namespace ADXETools.FalconRequests
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="aspPage"></param>
         /// <param name="requestData"></param>
         /// <returns></returns>
-        public async Task<string> SubmitFalconRequest(string requestData)
+        public async Task<string> SubmitFalconRequest(string aspPage, string requestData)
         {
             try
             {
                 var requestContent = new StringContent(requestData);
 
                 requestContent.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-                Uri uri = new Uri(environmentalConfiguration.FalconServiceUrl);
+                Uri uri = new Uri(environmentalConfiguration.FalconServiceUrl + "/" + aspPage);
 
                 // Make a request and get a response
                 return await SubmitFalconRequestNGetResponse(uri, requestContent);

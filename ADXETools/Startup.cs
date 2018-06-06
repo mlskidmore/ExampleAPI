@@ -44,13 +44,21 @@ namespace ADXETools
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-            MvcOptions mvcOptions = new MvcOptions();
+            services.AddCors();
+            services.AddOptions();
+            services.AddLogging();
+
+            MvcOptions mvcOptions = new MvcOptions
+            {
+                AllowBindingHeaderValuesToNonStringModelTypes = true,
+            };
+            services.AddMvcCore().AddXmlSerializerFormatters();
             services.AddMvc(config =>
             {
                 // Add XML and Text Content Negotiation
                 config.RespectBrowserAcceptHeader = true;
-                config.InputFormatters.Clear();
-                config.OutputFormatters.Clear();
+                //config.InputFormatters.Clear();
+                //config.OutputFormatters.Clear();
                 config.InputFormatters.Add(new PlainTextInputFormatter());
                 config.OutputFormatters.Add(new PlainTextOutputFormatter());
                 config.InputFormatters.Add(new XmlSerializerInputFormatter(mvcOptions));

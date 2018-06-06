@@ -13,7 +13,8 @@ namespace ADXETools.Controllers
     [Produces("application/xml")]
     public class MobileServicesController : Controller
     {
-        private readonly IFalconPort falconPort;
+        readonly IFalconPort falconPort;
+        const string aspPage = "Mobile.asp";
 
         /// <summary>
         /// 
@@ -35,7 +36,7 @@ namespace ADXETools.Controllers
         //[SwaggerRequestExample(typeof(string),typeof(OONLookupVehicleExample))]
         [HttpPost("OONVehicleLookup")]
         [ProducesResponseType(typeof(string), 201)]
-        public async Task<IActionResult> PostAsync([FromBody]string xmlInput)
+        public async Task<IActionResult> OONVehicleLookup([FromBody]string xmlInput)
         {
             try
             {
@@ -44,7 +45,7 @@ namespace ADXETools.Controllers
                     string msg = string.Format("Invalid input data received <{0}>.  Verify input request data.", xmlInput);
                     return BadRequest(msg);
                 }
-                var xmlOutput = await falconPort.SubmitFalconRequest(xmlInput);
+                var xmlOutput = await falconPort.SubmitFalconRequest(aspPage, xmlInput);
                 return StatusCode(StatusCodes.Status201Created, xmlOutput);
             }
             catch (Exception ex)
