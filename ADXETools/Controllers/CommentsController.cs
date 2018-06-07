@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ADXETools.FalconRequests;
+using ADXETools.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
-using ADXETools.FalconRequests;
-using System.Runtime.CompilerServices;
-using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace ADXETools.Controllers
@@ -17,65 +17,8 @@ namespace ADXETools.Controllers
     /// <summary>
     /// 
     /// </summary>
-    [XmlRoot]
-    public class CommentsRequest
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        [BindNever, XmlAttribute, JsonIgnore]
-        public string Method { get; set; } = null;
-        /// <summary>
-        /// 
-        /// </summary>
-        [Required, XmlElement]
-        public string WorkAssignmentId { get; set; } = string.Empty;
-        /// <summary>
-        /// 
-        /// </summary>
-        [Required, XmlElement]
-        public string CreatedForProfileId { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Required, XmlElement]
-        public string CommentSubject { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Required, XmlElement]
-        public string CommentText { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlElement]
-        public string Author { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlElement]
-        public string DestinationEmails { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [JsonIgnore, BindNever]
-        public string ClientToken { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public CommentsRequest() { }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    [Produces("application/json")]
+    [Produces("application/xml", "application/json")]
+    [Consumes("application/xml", "application/json")]
     public class CommentsController : Controller
     {
         readonly IFalconPort falconPort;
@@ -90,7 +33,7 @@ namespace ADXETools.Controllers
             this.falconPort = falconPort;
         }
 
-        bool Validate(CommentsRequest request)
+        bool Validate(CommentRequest request)
         {
             return request != null;
         }
@@ -101,8 +44,8 @@ namespace ADXETools.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("SaveComments")]
-        [ProducesResponseType(typeof(CommentsRequest), 201)]
-        public async Task<IActionResult> SaveComments([FromBody]CommentsRequest request)
+        [ProducesResponseType(typeof(CommentRequest), 201)]
+        public async Task<IActionResult> SaveComments([FromBody] CommentRequest request)
         {
             try
             {
@@ -111,12 +54,12 @@ namespace ADXETools.Controllers
                 {
                     return BadRequest("Invalid input data received. Verify input request data.");
                 }
-                var xmlResponse = request.ToXml(); //await falconPort.SubmitFalconRequest(aspPage, request.ToXml());
-                return StatusCode(StatusCodes.Status201Created, xmlResponse);
+                var xmlResponse = request.ToXml("Request"); //await falconPort.SubmitFalconRequest(aspPage, request.ToXml());
+                return StatusCode(StatusCodes.Status201Created, request);
             }
             catch (Exception ex)
             {
-                return BadRequest($"Processing error [{ ex }] received for { this.GetMethodName() } request [{ request.ToXml() }].  Verify input request data.");
+                return BadRequest($"Processing error [{ ex }] received for { this.GetMethodName() } request [{ request.ToXml("Request") }].  Verify input request data.");
             }
         }
     }

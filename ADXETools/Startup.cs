@@ -1,18 +1,21 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using ADXETools.FalconRequests;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.PlatformAbstractions;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.Examples;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using WebApiContrib.Core.Formatter.PlainText;
-using Microsoft.AspNetCore.Mvc;
-using ADXETools.FalconRequests;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Net.Http;
+using Microsoft.Extensions.PlatformAbstractions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using Swashbuckle.AspNetCore.Examples;
+using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.IO;
+using System.Net.Http;
+using WebApiContrib.Core.Formatter.PlainText;
 
 namespace ADXETools
 {
@@ -51,19 +54,18 @@ namespace ADXETools
             MvcOptions mvcOptions = new MvcOptions
             {
                 AllowBindingHeaderValuesToNonStringModelTypes = true,
+
             };
-            services.AddMvcCore().AddXmlSerializerFormatters();
             services.AddMvc(config =>
             {
                 // Add XML and Text Content Negotiation
                 config.RespectBrowserAcceptHeader = true;
                 //config.InputFormatters.Clear();
                 //config.OutputFormatters.Clear();
-                config.InputFormatters.Add(new PlainTextInputFormatter());
-                config.OutputFormatters.Add(new PlainTextOutputFormatter());
-                config.InputFormatters.Add(new XmlSerializerInputFormatter(mvcOptions));
-                config.OutputFormatters.Add(new XmlSerializerOutputFormatter());
-            });
+            })
+            .AddXmlSerializerFormatters()
+            .AddPlainTextFormatters()
+            .AddJsonOptions(opt => opt.SerializerSettings.ContractResolver = new DefaultContractResolver()); // fixes XML deserialization
 
             services.AddSwaggerGen(c =>
             {
@@ -88,6 +90,11 @@ namespace ADXETools
         {
             try
             {
+                JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+
                 if (env.IsDevelopment())
                 {
                     app.UseDeveloperExceptionPage();
