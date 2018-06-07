@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ADXETools.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Produces("application/xml", "application/json")]
     [Consumes("application/xml", "application/json")]
     public class MobileBackEndController : Controller

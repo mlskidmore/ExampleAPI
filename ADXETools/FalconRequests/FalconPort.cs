@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using ADXETools.Exceptions;
+using System.Net;
 
 namespace ADXETools.FalconRequests
 {
@@ -61,7 +63,8 @@ namespace ADXETools.FalconRequests
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
+                ex.ToString(); // get rid of warning
+                throw;
             }
         }
         #endregion Public Methods
@@ -81,15 +84,14 @@ namespace ADXETools.FalconRequests
                 }
                 else
                 {
-                    Console.WriteLine("Response from Falcon app is null or empty string!");
+                    Console.WriteLine("Response from Falcon app is null or empty!");
                 }
 
                 return responseXml;
             }
             else
             {
-                string err = string.Format("Status code:{0}, request message: {1}", requestResponse.StatusCode.ToString(), requestResponse.RequestMessage.ToString());
-                throw new Exception(err);
+                throw new HttpStatusException(requestResponse.StatusCode, requestResponse.ReasonPhrase, requestResponse.RequestMessage.ToString());
             }
         }
 
@@ -100,22 +102,19 @@ namespace ADXETools.FalconRequests
             {
                 XAttribute attrError = eleResponse.Attribute("Error");
                 XAttribute attrErrorDesc = eleResponse.Attribute("Desc");
-                if ((attrError != null) && (attrErrorDesc != null))
+                if (attrError != null && attrErrorDesc != null)
                 {
-                    var errorNum = attrError.Value.ToString();
-                    var errorDesc = attrErrorDesc.Value.ToString();
-                    string err = String.Empty;
+                    var errorNum = attrError.Value;
+                    var errorDesc = attrErrorDesc.Value;
                     if (Convert.ToInt32(errorNum) != 0)
                     {
-                        err = string.Format("Falcon app response error number:{0}, description: {1}", errorNum, errorDesc);
-                        throw new Exception(err);
+                        throw new HttpStatusException($"Falcon app response error code:{ errorNum }, description: { errorDesc }");
                     }
                     else
                     {
-                        if (!String.IsNullOrEmpty(errorDesc))
+                        if (!string.IsNullOrWhiteSpace(errorNum) || !string.IsNullOrWhiteSpace(errorDesc))
                         {
-                            err = string.Format("Falcon app response error number:{0}, description: {1}", errorNum, errorDesc);
-                            throw new Exception(err);
+                            throw new HttpStatusException($"Falcon app response error code:{ errorNum }, description: { errorDesc }");
                         }
                     }
                 }

@@ -51,6 +51,29 @@ static public class Extensions
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="xml"></param>
+    /// <param name="xmlRootName"></param>
+    /// <returns></returns>
+    static public T ParseXml<T>(this string xml, string xmlRootName = null) where T : class
+    {
+        if (xml == null)
+            return null;
+
+        T obj = default(T);
+        using (var stream = new StringReader(xml))
+        {
+            using (var xr = XmlReader.Create(stream))
+            {
+                obj = (T)new XmlSerializer(typeof(T), new XmlRootAttribute(xmlRootName ?? typeof(T).GetRootName()) { Namespace = "" }).Deserialize(xr);
+            }
+        }
+        return obj;
+    }
+
+    /// <summary>
     /// serializes 'this' instance as JSON
     /// </summary>
     /// <typeparam name="T"></typeparam>
