@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using ADXETools.FalconRequests;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
@@ -9,7 +10,7 @@ namespace ADXETools.Model
     /// 
     /// </summary>
     [XmlRoot]
-    public class MBESVRUpdateVehicle
+    public class MBESVRUpdateVehicle : ServiceInput
     {
         /// <summary>
         /// 

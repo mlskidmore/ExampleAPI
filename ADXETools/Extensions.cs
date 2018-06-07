@@ -22,6 +22,7 @@ static public class Extensions
         var rootAttributes = type?.GetCustomAttributes(typeof(XmlRootAttribute), false);
         if (rootAttributes?.Length <= 0)
             return type.Name;
+
         string name = ((XmlRootAttribute)rootAttributes?[0]).ElementName ?? type.Name;
         return name;
     }
@@ -104,20 +105,28 @@ static public class Extensions
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <returns name= "string"></returns>
-    public static string Serialize<T>(this T objectToSerialize)
+    /// <param name="objectToSerialize"></param>
+    /// <param name="xmlRootName"></param>
+    /// <returns></returns>
+    public static string Serialize<T>(this T objectToSerialize, string xmlRootName = null)
     {
-        XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
-        StringWriter stringWriter = new StringWriter();
-        var xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings { OmitXmlDeclaration = true, Indent = false, CheckCharacters = true, ConformanceLevel = ConformanceLevel.Auto });
-        xmlSerializer.Serialize(xmlWriter, objectToSerialize, new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty }));
-        var xmlString = stringWriter.ToString();
+        if (objectToSerialize == null)
+            return null;
 
-        if (XmlStringContainsEncodedValues(xmlString))
+        using (var stringWriter = new StringWriter())
         {
-            return DecodedXmlString(xmlString);
+            using (var xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings { OmitXmlDeclaration = true, Indent = false, CheckCharacters = true, ConformanceLevel = ConformanceLevel.Auto }))
+            {
+                new XmlSerializer(objectToSerialize.GetType(), new XmlRootAttribute(xmlRootName ?? objectToSerialize.GetType().GetRootName()) { Namespace = "" })
+                    .Serialize(xmlWriter, objectToSerialize, new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty }));
+            }
+            var xmlString = stringWriter.ToString();
+            if (XmlStringContainsEncodedValues(xmlString))
+            {
+                return DecodedXmlString(xmlString);
+            }
+            return xmlString;
         }
-        return xmlString;
     }
 
     private static string DecodedXmlString(string v)

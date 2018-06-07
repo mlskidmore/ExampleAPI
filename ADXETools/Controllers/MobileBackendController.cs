@@ -98,7 +98,8 @@ namespace ADXETools.Controllers
                     string msg = string.Format("Invalid input data received <{0}>.  Verify input request data.", xmlInput);
                     return BadRequest(msg);
                 }
-                var xmlOutput = xmlInput.ToXml("Request");//await falconPort.SubmitFalconRequest(_aspPage, xmlInput.ToXml("Request"));
+                var xmlOutput = xmlInput.ToXml("Request");
+                xmlOutput = await _falconPort.SubmitFalconRequest(_aspPage, FalconRequest<MBESVRUpdateVehicle>.CreateRequest(xmlInput, this.GetMethodName()));
                 return StatusCode(StatusCodes.Status201Created, xmlInput);
             }
             catch (Exception ex)
