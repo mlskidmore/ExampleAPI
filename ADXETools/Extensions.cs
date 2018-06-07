@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Web;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -75,4 +76,39 @@ static public class Extensions
     {
         return memberName;
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns name= "string"></returns>
+    public static string Serialize<T>(this T objectToSerialize)
+    {
+        XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
+        StringWriter stringWriter = new StringWriter();
+        var xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings { OmitXmlDeclaration = true, Indent = false, CheckCharacters = true, ConformanceLevel = ConformanceLevel.Auto });
+        xmlSerializer.Serialize(xmlWriter, objectToSerialize, new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty }));
+        var xmlString = stringWriter.ToString();
+
+        if (XmlStringContainsEncodedValues(xmlString))
+        {
+            return DecodedXmlString(xmlString);
+        }
+        return xmlString;
+    }
+
+    private static string DecodedXmlString(string v)
+    {
+        return HttpUtility.HtmlDecode(v);
+    }
+
+    private static bool XmlStringContainsEncodedValues(string v)
+    {
+        if (v.Contains("&gt;") || v.Contains("&lt;"))
+        {
+            return true;
+        }
+        return false;
+    }
+
 }
