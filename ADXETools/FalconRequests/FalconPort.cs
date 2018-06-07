@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using ADXETools.Exceptions;
+using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using ADXETools.Exceptions;
-using System.Net;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ADXETools.FalconRequests
 {
@@ -19,7 +19,7 @@ namespace ADXETools.FalconRequests
         /// <param name="aspPage"></param>
         /// <param name="requestData"></param>
         /// <returns></returns>
-        Task<string> SubmitFalconRequest(string aspPage, string requestData);
+        Task<string> SubmitFalconRequest<T>(string aspPage, T requestData);
     }
 
     /// <summary>
@@ -46,14 +46,16 @@ namespace ADXETools.FalconRequests
         /// <summary>
         /// 
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="aspPage"></param>
         /// <param name="requestData"></param>
         /// <returns></returns>
-        public async Task<string> SubmitFalconRequest(string aspPage, string requestData)
+        public async Task<string> SubmitFalconRequest<T>(string aspPage, T requestData)
         {
             try
             {
-                var requestContent = new StringContent(requestData);
+                var request = requestData.Serialize();
+                var requestContent = new StringContent(request);
 
                 requestContent.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
                 Uri uri = new Uri(_environmentalConfiguration.FalconServiceUrl + "/" + aspPage);

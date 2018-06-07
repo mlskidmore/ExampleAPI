@@ -2,7 +2,7 @@
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace eagle.Outside.Common.FalconRequests
+namespace ADXETools.FalconRequests
 { 
     /// <summary>
     /// Templatized Falcon Request object constrained to objects of type ServiceInput
@@ -30,7 +30,17 @@ namespace eagle.Outside.Common.FalconRequests
         public static FalconRequest<T> CreateRequest(T serviceInput, string headerString)
         {
             return new FalconRequest<T> { Header = new Header(headerString), ServiceInput = serviceInput };
-        }        
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serviceInput"></param>
+        /// <param name="headerObject"></param>
+        /// <returns></returns>
+        public static FalconRequest<T> CreateRequest(T serviceInput, Header headerObject)
+        {
+            return new FalconRequest<T> { Header = new Header(headerObject.FalconServiceRequestAction), ServiceInput = serviceInput };
+        }
     }
 
     /// <summary>
