@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 
 namespace ADXETools.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Produces("application/xml", "application/json")]
     [Consumes("application/xml", "application/json")]
     public class MobileBackEndController : Controller
     {
-        readonly IFalconPort falconPort;
-        const string aspPage = "MobileBackEndSVR.asp";
+        readonly IFalconPort _falconPort;
+        const string _aspPage = "MobileBackEndSVR.asp";
 
         /// <summary>
         /// 
@@ -20,7 +23,7 @@ namespace ADXETools.Controllers
         /// <param name="falconPort"></param>
         public MobileBackEndController(IFalconPort falconPort)
         {
-            this.falconPort = falconPort;
+            _falconPort = falconPort;
         }
 
         /// <summary>
@@ -47,7 +50,8 @@ namespace ADXETools.Controllers
                     string msg = string.Format("Invalid input data received <{0}>.  Verify input request data.", xmlInput);
                     return BadRequest(msg);
                 }
-                var xmlOutput = xmlInput.ToXml("Request");//await falconPort.SubmitFalconRequest(aspPage, xmlInput);
+                //var xmlOutput = xmlInput.ToXml("Request");
+                var xmlOutput = await _falconPort.SubmitFalconRequest(_aspPage, xmlInput);
                 return StatusCode(StatusCodes.Status201Created, xmlOutput);
             }
             catch (Exception ex)
@@ -70,7 +74,7 @@ namespace ADXETools.Controllers
                     string msg = string.Format("Invalid input data received <{0}>.  Verify input request data.", xmlInput);
                     return BadRequest(msg);
                 }
-                var xmlOutput = xmlInput.ToXml("Request");//await falconPort.SubmitFalconRequest(aspPage, xmlInput);
+                var xmlOutput = xmlInput.ToXml("Request");//await falconPort.SubmitFalconRequest(_aspPage, xmlInput);
                 return StatusCode(StatusCodes.Status201Created, xmlOutput);
             }
             catch (Exception ex)
@@ -94,7 +98,7 @@ namespace ADXETools.Controllers
                     string msg = string.Format("Invalid input data received <{0}>.  Verify input request data.", xmlInput);
                     return BadRequest(msg);
                 }
-                var xmlOutput = xmlInput.ToXml("Request");//await falconPort.SubmitFalconRequest(aspPage, xmlInput.ToXml("Request"));
+                var xmlOutput = xmlInput.ToXml("Request");//await falconPort.SubmitFalconRequest(_aspPage, xmlInput.ToXml("Request"));
                 return StatusCode(StatusCodes.Status201Created, xmlInput);
             }
             catch (Exception ex)

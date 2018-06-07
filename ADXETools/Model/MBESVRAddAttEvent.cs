@@ -21,16 +21,6 @@ namespace ADXETools.Model
         /// </summary>
         [BindNever, XmlAttribute, JsonIgnore]
         public string Method { get; set; } = null;
-        /// <summary>
-        /// 
-        /// </summary>
-        [Required, XmlElement]
-        public string WorkAssignmentId { get; set; } = string.Empty;
-        /// <summary>
-        /// 
-        /// </summary>
-        [Required, XmlElement]
-        public string CreatedForProfileId { get; set; } = string.Empty;
 
         /// <summary>
         /// 
@@ -42,6 +32,35 @@ namespace ADXETools.Model
         /// 
         /// </summary>
         [Required, XmlElement]
-        public string BusinessCategory { get; set; } = string.Empty;                
+        public string BusinessCategory { get; set; } = string.Empty;
+        /// <summary>
+        /// 
+        /// </summary>
+        [Required, XmlElement]
+        public string WorkAssignmentId { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlElement]
+        public string VINChange { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlElement]
+        public string MakeChange { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlElement]
+        public string ModelChange { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlElement]
+        public string YearChange { get; set; } = string.Empty;
     }
 }
