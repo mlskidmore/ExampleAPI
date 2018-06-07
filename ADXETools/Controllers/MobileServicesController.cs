@@ -10,11 +10,13 @@ namespace ADXETools.Controllers
     /// <summary>
     /// 
     /// </summary>
-    [Produces("application/xml")]
+    [Produces("application/xml", "application/json")]
+    [Consumes("application/xml", "application/json")]
+
     public class MobileServicesController : Controller
     {
-        readonly IFalconPort falconPort;
-        const string aspPage = "Mobile.asp";
+        readonly IFalconPort _falconPort;
+        const string _aspPage = "Mobile.asp";
 
         /// <summary>
         /// 
@@ -22,7 +24,7 @@ namespace ADXETools.Controllers
         /// <param name="falconPort"></param>
         public MobileServicesController(IFalconPort falconPort)
         {
-            this.falconPort = falconPort;
+            _falconPort = falconPort;
         }
 
         /// <summary>
@@ -45,7 +47,7 @@ namespace ADXETools.Controllers
                     string msg = string.Format("Invalid input data received <{0}>.  Verify input request data.", xmlInput);
                     return BadRequest(msg);
                 }
-                var xmlOutput = await falconPort.SubmitFalconRequest(aspPage, xmlInput);
+                var xmlOutput = await _falconPort.SubmitFalconRequest(_aspPage, xmlInput);
                 return StatusCode(StatusCodes.Status201Created, xmlOutput);
             }
             catch (Exception ex)

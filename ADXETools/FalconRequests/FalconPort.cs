@@ -25,8 +25,8 @@ namespace ADXETools.FalconRequests
     /// </summary>
     public class FalconPort : IFalconPort
     {
-        private readonly HttpClient httpClient = new HttpClient();
-        private readonly IEnvironmentConfiguration environmentalConfiguration;
+        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly IEnvironmentConfiguration _environmentalConfiguration;
 
         #region Public Methods
         /// <summary>
@@ -36,8 +36,9 @@ namespace ADXETools.FalconRequests
         /// <param name="environmentalConfiguration"></param>
         public FalconPort(HttpClient httpClient, IEnvironmentConfiguration environmentalConfiguration)
         {
-            this.httpClient = httpClient;
-            this.environmentalConfiguration = environmentalConfiguration;
+           _httpClient = httpClient;
+           _httpClient.Timeout = TimeSpan.FromSeconds(300);
+           _environmentalConfiguration = environmentalConfiguration;
         }
 
         /// <summary>
@@ -53,7 +54,7 @@ namespace ADXETools.FalconRequests
                 var requestContent = new StringContent(requestData);
 
                 requestContent.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-                Uri uri = new Uri(environmentalConfiguration.FalconServiceUrl + "/" + aspPage);
+                Uri uri = new Uri(_environmentalConfiguration.FalconServiceUrl + "/" + aspPage);
 
                 // Make a request and get a response
                 return await SubmitFalconRequestNGetResponse(uri, requestContent);
@@ -68,9 +69,7 @@ namespace ADXETools.FalconRequests
         #region Private Methods
         private async Task<string> SubmitFalconRequestNGetResponse(Uri uri, HttpContent requestContent)
         {
-            httpClient.Timeout = TimeSpan.FromSeconds(300);
-
-            var requestResponse = await httpClient.PostAsync(uri, requestContent);
+            var requestResponse = await _httpClient.PostAsync(uri, requestContent);
 
             if (requestResponse.IsSuccessStatusCode)
             {

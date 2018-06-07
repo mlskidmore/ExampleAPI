@@ -62,8 +62,10 @@ namespace ADXETools
                 config.RespectBrowserAcceptHeader = true;
                 //config.InputFormatters.Clear();
                 //config.OutputFormatters.Clear();
+                config.InputFormatters.Add(new Formatters.XmlSerializerInputFormatter());
+                config.OutputFormatters.Add(new Formatters.XmlSerializerOutputFormatter());
             })
-            .AddXmlSerializerFormatters()
+            //.AddXmlSerializerFormatters()
             .AddPlainTextFormatters()
             .AddJsonOptions(opt => opt.SerializerSettings.ContractResolver = new DefaultContractResolver()); // fixes XML deserialization
 

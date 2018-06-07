@@ -21,8 +21,8 @@ namespace ADXETools.Controllers
     [Consumes("application/xml", "application/json")]
     public class CommentsController : Controller
     {
-        readonly IFalconPort falconPort;
-        const string aspPage = "CommentsSvr.asp";
+        readonly IFalconPort _falconPort;
+        const string _aspPage = "CommentsSvr.asp";
 
         /// <summary>
         /// 
@@ -30,7 +30,7 @@ namespace ADXETools.Controllers
         /// <param name="falconPort"></param>
         public CommentsController(IFalconPort falconPort)
         {
-            this.falconPort = falconPort;
+            _falconPort = falconPort;
         }
 
         bool Validate(CommentRequest request)
@@ -49,13 +49,13 @@ namespace ADXETools.Controllers
         {
             try
             {
-                request.Method = this.GetMethodName();
                 if (!Validate(request))
                 {
                     return BadRequest("Invalid input data received. Verify input request data.");
                 }
-                var xmlResponse = request.ToXml("Request"); //await falconPort.SubmitFalconRequest(aspPage, request.ToXml());
-                return StatusCode(StatusCodes.Status201Created, request);
+                request.Method = this.GetMethodName();
+                var xmlResponse = await _falconPort.SubmitFalconRequest(_aspPage, request.ToXml("Request"));
+                return StatusCode(StatusCodes.Status201Created, xmlResponse);
             }
             catch (Exception ex)
             {
