@@ -38,30 +38,6 @@ namespace ADXETools.Model
         /// 
         /// </summary>
         [Required, XmlElement]
-        public string WorkAssignmentId { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlElement]
-        public string VINChange { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlElement]
-        public string MakeChange { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlElement]
-        public string ModelChange { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlElement]
-        public string YearChange { get; set; } = string.Empty;
+        public string WorkAssignmentId { get; set; } = string.Empty;        
     }
 }
