@@ -109,25 +109,25 @@ static public class Extensions
         var jObject = JObject.Parse(json);
 
         List<KeyValuePair<string, string>> nameValues = new List<KeyValuePair<string, string>>();
-        GetValues(jObject, "", nameValues);
+        GetValues(jObject, nameValues);
         return nameValues;
     }
 
-    static void GetValues(IEnumerable<JToken> jToken, string baseName, List<KeyValuePair<string, string>> nameValues)
+    static void GetValues(IEnumerable<JToken> jToken, List<KeyValuePair<string, string>> nameValues)
     {
         foreach (var item in jToken)
         {
             if (item.Type == JTokenType.Array)
             {
-                GetValues(item.Children(), item.Path, nameValues);
+                GetValues(item.Children(), nameValues);
             }
             else if (item.Type == JTokenType.Object)
             {
-                GetValues(item.Children(), item.Path, nameValues);
+                GetValues(item.Children(), nameValues);
             }
             else if (item.Type == JTokenType.Property)
             {
-                GetValues(item, item.Path, nameValues);
+                GetValues(item, nameValues);
             }
             else
             {
