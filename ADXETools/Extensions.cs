@@ -1,6 +1,10 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Web;
 using System.Xml;
@@ -88,6 +92,48 @@ static public class Extensions
 
         string json = JsonConvert.SerializeObject(thisObj);
         return json;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="thisObj"></param>
+    /// <returns></returns>
+    static public List<KeyValuePair<string, string>> SerializeAsKeyValuePairs<T>(this T thisObj) where T : class
+    {
+        if (thisObj == null)
+            return null;
+
+        var json = thisObj.ToJson();
+        var jObject = JObject.Parse(json);
+
+        List<KeyValuePair<string, string>> nameValues = new List<KeyValuePair<string, string>>();
+        GetValues(jObject, "", nameValues);
+        return nameValues;
+    }
+
+    static void GetValues(IEnumerable<JToken> jToken, string baseName, List<KeyValuePair<string, string>> nameValues)
+    {
+        foreach (var item in jToken)
+        {
+            if (item.Type == JTokenType.Array)
+            {
+                GetValues(item.Children(), item.Path, nameValues);
+            }
+            else if (item.Type == JTokenType.Object)
+            {
+                GetValues(item.Children(), item.Path, nameValues);
+            }
+            else if (item.Type == JTokenType.Property)
+            {
+                GetValues(item, item.Path, nameValues);
+            }
+            else
+            {
+                nameValues.Add(new KeyValuePair<string, string>(item.Path, item.Value<string>()));
+            }
+        }
     }
 
     /// <summary>

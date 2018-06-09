@@ -1,5 +1,9 @@
-﻿using ADXETools.Exceptions;
+﻿using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -19,7 +23,15 @@ namespace ADXETools.FalconRequests
         /// <param name="aspPage"></param>
         /// <param name="requestData"></param>
         /// <returns></returns>
-        Task<string> SubmitFalconRequest<T>(string aspPage, T requestData);
+        Task<string> SubmitFalconRequest<T>(string aspPage, T requestData) where T : class;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<string> SubmitCosecRequest<T>(T request) where T : class;
     }
 
     /// <summary>
@@ -27,20 +39,22 @@ namespace ADXETools.FalconRequests
     /// </summary>
     public class FalconPort : IFalconPort
     {
-        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly HttpClient _httpClient;
         private readonly IEnvironmentConfiguration _environmentalConfiguration;
+        ADXECertificateValidationHandler _adxeCertificateValidationHandler;
 
         #region Public Methods
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="httpClient"></param>
         /// <param name="environmentalConfiguration"></param>
-        public FalconPort(HttpClient httpClient, IEnvironmentConfiguration environmentalConfiguration)
+        /// <param name="adxeCertificateValidationHandler"></param>
+        public FalconPort(IEnvironmentConfiguration environmentalConfiguration, ADXECertificateValidationHandler adxeCertificateValidationHandler)
         {
-           _httpClient = httpClient;
-           _httpClient.Timeout = TimeSpan.FromSeconds(300);
-           _environmentalConfiguration = environmentalConfiguration;
+            _environmentalConfiguration = environmentalConfiguration;
+            _adxeCertificateValidationHandler = adxeCertificateValidationHandler;
+            _httpClient = new HttpClient(_adxeCertificateValidationHandler);
+            _httpClient.Timeout = TimeSpan.FromSeconds(300);
         }
 
         /// <summary>
@@ -50,11 +64,11 @@ namespace ADXETools.FalconRequests
         /// <param name="aspPage"></param>
         /// <param name="requestData"></param>
         /// <returns></returns>
-        public async Task<string> SubmitFalconRequest<T>(string aspPage, T requestData)
+        public async Task<string> SubmitFalconRequest<T>(string aspPage, T requestData) where T : class
         {
             try
             {
-                var request = requestData.Serialize();
+                var request = requestData.Serialize("Request");
                 var requestContent = new StringContent(request);
 
                 requestContent.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
@@ -122,6 +136,66 @@ namespace ADXETools.FalconRequests
                 }
             }
         }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="requestData"></param>
+        /// <returns></returns>
+        public async Task<string> SubmitCosecRequest<T>(T requestData) where T : class
+        {
+            try
+            {
+                var content = new StringContent(string.Join("&", requestData.SerializeAsKeyValuePairs().Select(kvp => kvp.Key + "=" + kvp.Value)));
+
+                content.Headers.ContentType = new MediaTypeHeaderValue("multipart/form-data");
+                content.Headers.Add("Cookie", "Credential=new;OracleID=;AIPid=;MRPid=;DALogout=;DAState=;ADPCSGCoSec=;");
+                Uri uri = new Uri(_environmentalConfiguration.CosecUrl);
+
+                var response = await _httpClient.PostAsync(uri, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    response.Headers.TryGetValues("Set-Cookie", out var values);
+                    string ticket = values?.FirstOrDefault() ?? "";
+                    if (ticket?.ToLowerInvariant().Contains("credential=") == true || ticket?.ToLowerInvariant().Contains("falconticket=") == true)
+                    {
+
+                        return $"{{ 'status' : 'success', '{ ticket.Replace("ADPCSGCoSec=", "").Replace("&", "', '").Replace("=", "' : '").Replace(";", "'") }'}}";
+                    }
+
+                    return JsonConvert.SerializeObject(new { status = "failure", error = GetErrorMsg(response) });
+                }
+                else
+                {
+                    throw new HttpStatusException(response.StatusCode, response.ReasonPhrase, response.RequestMessage.ToString()); // "Incorrect UserId or Password");
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.ToString(); // get rid of warning
+                throw;
+            }
+        }
+
+        string GetErrorMsg(HttpResponseMessage response)
+        {
+            Dictionary<string, StringValues> nvc = QueryHelpers.ParseQuery(response.RequestMessage.RequestUri.Query);
+
+            string code = nvc?["failure-code"] ?? "<unknown failure>";
+            switch (code)
+            {
+                case "0":
+                //return "Error code: " + code + ";\r\nUser ID and/or Password is incorrect!"; User does not exist. ???
+                case "1":
+                    return "Login_Bad_Login";
+                case "2":
+                    return "Login_Too_Many_Attempts";
+                default:
+                    return $"Error_Code_Not_Implemented='{ code }'";
+            }
+        }
+
         #endregion Private Methods
     }
 }

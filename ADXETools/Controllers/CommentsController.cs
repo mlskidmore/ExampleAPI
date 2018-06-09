@@ -1,5 +1,4 @@
-﻿using ADXETools.Exceptions;
-using ADXETools.FalconRequests;
+﻿using ADXETools.FalconRequests;
 using ADXETools.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -55,8 +54,7 @@ namespace ADXETools.Controllers
                     return BadRequest("Invalid input data received. Verify input request data.");
                 }
                 request.Method = this.GetMethodName();
-                var xx = request.ToXml("Request").ParseXml<CommentRequest>("Request");
-                var xmlResponse = await _falconPort.SubmitFalconRequest(_aspPage, request.ToXml("Request"));
+                var xmlResponse = await _falconPort.SubmitFalconRequest(_aspPage, request);
                 return StatusCode(StatusCodes.Status201Created, xmlResponse);
             }
             catch (HttpStatusException ex)

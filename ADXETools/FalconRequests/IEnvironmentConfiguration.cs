@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
+using System.Linq;
 
 namespace ADXETools.FalconRequests
 {
@@ -13,6 +13,11 @@ namespace ADXETools.FalconRequests
         /// 
         /// </summary>
         string FalconServiceUrl { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        string CosecUrl { get; }
     }
 
     /// <summary>
@@ -30,6 +35,7 @@ namespace ADXETools.FalconRequests
 
             var falconCredentials = ((JArray)jVcap["user-provided"]).First(s => s["name"].Value<string>() == "falcon")["credentials"];
             FalconServiceUrl = falconCredentials["FALCON_SERVICE_URL"].Value<string>();
+            CosecUrl = falconCredentials["COSEC"].Value<string>();
         }
 
         /// <summary>
@@ -37,5 +43,6 @@ namespace ADXETools.FalconRequests
         /// </summary>
         public string FalconServiceUrl { get; }
 
+        public string CosecUrl { get; }
     }
 }

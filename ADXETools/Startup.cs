@@ -81,6 +81,7 @@ namespace ADXETools
             services.TryAddSingleton<IEnvironmentConfiguration>(new EnvironmentConfiguration(Configuration));
             services.TryAddSingleton<HttpClient>();
             services.TryAddSingleton<IFalconPort, FalconPort>();
+            services.TryAddSingleton<ADXECertificateValidationHandler>();
         }
 
         /// <summary>
