@@ -43,6 +43,9 @@ namespace ADXETools.FalconRequests
         /// </summary>
         public string FalconServiceUrl { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string CosecUrl { get; }
     }
 }

@@ -29,7 +29,7 @@ namespace ADXETools.Controllers
         /// <summary>
         /// Adds attachment from mobile device
         /// </summary>
-        /// <param name="xmlInput"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
         /// <response code = "201">Returns saved attachment info</response>
         /// <response code = "400">Invalid input parameters</response>
@@ -41,23 +41,21 @@ namespace ADXETools.Controllers
         //[SwaggerRequestExample(typeof(string),typeof(OONLookupVehicleExample))]
         [HttpPost("MobileBackEndAddAttachment")]
         [ProducesResponseType(typeof(MBESVRAddAttachmentRequest), 201)]
-        public async Task<IActionResult> MobileBackEndAddAttachment([FromBody]MBESVRAddAttachmentRequest xmlInput)
+        public async Task<IActionResult> MobileBackEndAddAttachment([FromBody] MBESVRAddAttachmentRequest request)
         {
             try
             {
-                if (xmlInput == null)
+                if (request == null)
                 {
-                    string msg = string.Format("Invalid input data received <{0}>.  Verify input request data.", xmlInput);
-                    return BadRequest(msg);
+                    return BadRequest($"Invalid input data received. Verify input request data.");
                 }
-                //var xmlOutput = xmlInput.ToXml("Request");
-                var xmlOutput = await _falconPort.SubmitFalconRequest(_aspPage, xmlInput);
+                //var xmlOutput = request.ToXml("Request");
+                var xmlOutput = await _falconPort.SubmitFalconRequest(_aspPage, FalconRequest<MBESVRAddAttachmentRequest>.CreateRequest(request, this.GetMethodName()));
                 return StatusCode(StatusCodes.Status201Created, xmlOutput);
             }
             catch (Exception ex)
             {
-                string msg = string.Format("Processing error <{0}> received for PostAttachments request <{1}>.  Verify input request data.", ex.Message, xmlInput);
-                return BadRequest(msg);
+                return BadRequest($"Processing error [{ ex }] received for PostAttachments request [{ request.ToXml() }].  Verify input request data.");
             }
         }
         /// <summary>
@@ -65,22 +63,20 @@ namespace ADXETools.Controllers
         /// </summary>
         [HttpPost("MobileBackEndAddAttEvent")]
         [ProducesResponseType(typeof(MBESVRAddAttachmentRequest), 201)]
-        public async Task<IActionResult> MobileBackEndAddAttEvent([FromBody]MBESVRAddAttEventRequest xmlInput)
+        public async Task<IActionResult> MobileBackEndAddAttEvent([FromBody] MBESVRAddAttEventRequest request)
         {
             try
             {
-                if (xmlInput == null)
+                if (request == null)
                 {
-                    string msg = string.Format("Invalid input data received <{0}>.  Verify input request data.", xmlInput);
-                    return BadRequest(msg);
+                    return BadRequest($"Invalid input data received. Verify input request data.");
                 }
-                var xmlOutput = xmlInput.ToXml("Request");//await falconPort.SubmitFalconRequest(_aspPage, xmlInput);
+                var xmlOutput = await _falconPort.SubmitFalconRequest(_aspPage, FalconRequest<MBESVRAddAttEventRequest>.CreateRequest(request, this.GetMethodName()));
                 return StatusCode(StatusCodes.Status201Created, xmlOutput);
             }
             catch (Exception ex)
             {
-                string msg = string.Format("Processing error <{0}> received for PostAttachments request <{1}>.  Verify input request data.", ex.Message, xmlInput);
-                return BadRequest(msg);
+                return BadRequest($"Processing error [{ ex }] received for PostAttachments request [{ request.ToXml() }].  Verify input request data.");
             }
         }
 
@@ -89,23 +85,21 @@ namespace ADXETools.Controllers
         /// </summary>
         [HttpPost("MobileBackEndUpdateVehicle")]
         [ProducesResponseType(typeof(MBESVRAddAttachmentRequest), 201)]
-        public async Task<IActionResult> MobileBackEndUpdateVehicle([FromBody]MBESVRUpdateVehicle xmlInput)
+        public async Task<IActionResult> MobileBackEndUpdateVehicle([FromBody] MBESVRUpdateVehicle request)
         {
             try
             {
-                if (xmlInput == null)
+                if (request == null)
                 {
-                    string msg = string.Format("Invalid input data received <{0}>.  Verify input request data.", xmlInput);
-                    return BadRequest(msg);
+                    return BadRequest($"Invalid input data received. Verify input request data.");
                 }
-                var xmlOutput = xmlInput.ToXml("Request");
-                xmlOutput = await _falconPort.SubmitFalconRequest(_aspPage, FalconRequest<MBESVRUpdateVehicle>.CreateRequest(xmlInput, this.GetMethodName()));
-                return StatusCode(StatusCodes.Status201Created, xmlInput);
+                var xmlOutput = request.ToXml("Request");
+                xmlOutput = await _falconPort.SubmitFalconRequest(_aspPage, FalconRequest<MBESVRUpdateVehicle>.CreateRequest(request, this.GetMethodName()));
+                return StatusCode(StatusCodes.Status201Created, request);
             }
             catch (Exception ex)
             {
-                string msg = string.Format("Processing error <{0}> received for PostAttachments request <{1}>.  Verify input request data.", ex.Message, xmlInput);
-                return BadRequest(msg);
+                return BadRequest($"Processing error [{ ex }] received for PostAttachments request [{ request.ToXml() }].  Verify input request data.");
             }
         }
     }
