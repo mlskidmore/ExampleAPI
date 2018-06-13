@@ -15,7 +15,7 @@ namespace ADXETools.Controllers
     public class MobileBackEndController : Controller
     {
         readonly IFalconPort _falconPort;
-        const string _aspPage = "MobileBackEndSVR.asp";
+        const string _aspPage = "MobileBackEnd.asp";
 
         /// <summary>
         /// 
@@ -96,6 +96,10 @@ namespace ADXETools.Controllers
                 var xmlOutput = request.ToXml("Request");
                 xmlOutput = await _falconPort.SubmitFalconRequest(_aspPage, FalconRequest<MBESVRUpdateVehicle>.CreateRequest(request, this.GetMethodName()));
                 return StatusCode(StatusCodes.Status201Created, request);
+            }
+            catch (HttpStatusException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Message);
             }
             catch (Exception ex)
             {

@@ -27,18 +27,18 @@ namespace ADXETools.Model
         /// 
         /// </summary>
         [Required, XmlElement]
-        public string RoleCode { get; set; } = string.Empty;
+        public string roleCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 
         /// </summary>
         [Required, XmlElement]
-        public string BusinessCategory { get; set; } = string.Empty;
+        public string businessCategory { get; set; } = string.Empty;
         /// <summary>
         /// 
         /// </summary>
         [Required, XmlElement]
-        public string WorkAssignmentId { get; set; } = string.Empty;
+        public string WorkAssignmentID { get; set; } = string.Empty;
 
         /// <summary>
         /// 

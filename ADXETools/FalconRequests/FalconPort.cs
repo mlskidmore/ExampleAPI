@@ -72,6 +72,9 @@ namespace ADXETools.FalconRequests
                 var requestContent = new StringContent(request);
 
                 requestContent.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+                //requestContent.Headers.ContentType = new MediaTypeHeaderValue("application/xml");
+                //requestContent.Headers.ContentType = new MediaTypeHeaderValue("text/xml");
+
                 Uri uri = new Uri(_environmentalConfiguration.FalconServiceUrl + "/" + aspPage);
 
                 // Make a request and get a response
@@ -128,7 +131,7 @@ namespace ADXETools.FalconRequests
                     }
                     else
                     {
-                        if (!string.IsNullOrWhiteSpace(errorNum) || !string.IsNullOrWhiteSpace(errorDesc))
+                        if ((!string.IsNullOrWhiteSpace(errorNum) && errorNum != "0") || !string.IsNullOrWhiteSpace(errorDesc))
                         {
                             throw new HttpStatusException($"Falcon app response error code:{ errorNum }, description: { errorDesc }");
                         }
