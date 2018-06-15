@@ -1,6 +1,7 @@
 ﻿using ADXETools.FalconRequests;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 
@@ -27,23 +28,23 @@ namespace ADXETools.Model
         /// 
         /// </summary>
         [Required, XmlElement]
-        public string RoleCode { get; set; } = string.Empty;
+        public string roleCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 
         /// </summary>
         [Required, XmlElement]
-        public string BusinessCategory { get; set; } = string.Empty;
+        public string businessCategory { get; set; } = string.Empty;
 
         /// <summary>
         /// 
         /// </summary>
         [Required, XmlElement]
-        public string WorkAssignmentId { get; set; } = string.Empty;
+        public string WorkAssignmentID { get; set; } = string.Empty;
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement]
-        public string Assignments { get; set; } = string.Empty;
+        [Required, XmlArray]
+        public List<Attachment> Attachments { get; set; } = null;
     }
 }
