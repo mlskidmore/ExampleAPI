@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
-namespace ADXETools.Controllers
+namespace ADXETools.Controllers.Mobile
 {
     /// <summary>
     /// 
@@ -85,6 +85,7 @@ namespace ADXETools.Controllers
         /// </summary>
         [HttpPost("MobileBackEndUpdateVehicle")]
         [ProducesResponseType(typeof(MBESVRAddAttachmentRequest), 201)]
+        [ApiExplorerSettings(GroupName = "Mobile")]
         public async Task<IActionResult> MobileBackEndUpdateVehicle([FromBody] MBESVRUpdateVehicle request)
         {
             try

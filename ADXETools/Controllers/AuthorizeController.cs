@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
-namespace ADXETools.Controllers
+namespace ADXETools.Controllers.Authorize
 {
 
     /// <summary>
