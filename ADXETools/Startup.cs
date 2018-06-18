@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -11,7 +10,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Examples;
 using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -58,10 +56,8 @@ namespace ADXETools
             };
             services.AddMvc(config =>
             {
-                // Add XML and Text Content Negotiation
+                // Add XML Content Negotiation
                 config.RespectBrowserAcceptHeader = true;
-                //config.InputFormatters.Clear();
-                //config.OutputFormatters.Clear();
                 config.InputFormatters.Add(new Formatters.XmlSerializerInputFormatter());
                 config.OutputFormatters.Add(new Formatters.XmlSerializerOutputFormatter());
             })
