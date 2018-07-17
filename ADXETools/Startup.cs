@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -11,7 +10,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Examples;
 using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -58,10 +56,9 @@ namespace ADXETools
             };
             services.AddMvc(config =>
             {
-                // Add XML and Text Content Negotiation
+                config.Conventions.Add(new ApiExplorerGroup());
+                // Add XML Content Negotiation
                 config.RespectBrowserAcceptHeader = true;
-                //config.InputFormatters.Clear();
-                //config.OutputFormatters.Clear();
                 config.InputFormatters.Add(new Formatters.XmlSerializerInputFormatter());
                 config.OutputFormatters.Add(new Formatters.XmlSerializerOutputFormatter());
             })
@@ -71,7 +68,9 @@ namespace ADXETools
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "ADXE Tools API", Version = "v1" });
+                c.SwaggerDoc("authorize", new Info { Title = "ADXE Tools API - Authorize", Version = "v1" });
+                c.SwaggerDoc("mobile", new Info { Title = "ADXE Tools API - Mobile Services", Version = "v1" });
+                c.SwaggerDoc("claim", new Info { Title = "ADXE Tools API - Claim Services", Version = "v1" });
                 var basePath = PlatformServices.Default.Application.ApplicationBasePath;
                 var xmlPath = Path.Combine(basePath, "ADXETools.xml");
                 c.IncludeXmlComments(xmlPath);
@@ -109,10 +108,12 @@ namespace ADXETools
                 });
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("../swagger/v1/swagger.json", "ADXE Tools API");
+                    c.SwaggerEndpoint("../swagger/authorize/swagger.json", "ADXE Tools API - Authorize");
+                    c.SwaggerEndpoint("../swagger/mobile/swagger.json", "ADXE Tools API - Mobile Services");
+                    c.SwaggerEndpoint("../swagger/claim/swagger.json", "ADXE Tools API - Claim Services");
                 });
 
-                app.UseMvcWithDefaultRoute();
+                //app.UseMvcWithDefaultRoute();
                 app.UseMvc();
             }
             catch (Exception ex)

@@ -2,17 +2,10 @@
 using ADXETools.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
-namespace ADXETools.Controllers
+namespace ADXETools.Controllers.Claim
 {
     /// <summary>
     /// 

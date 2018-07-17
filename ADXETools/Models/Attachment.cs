@@ -1,6 +1,4 @@
-﻿using ADXETools.FalconRequests;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 
 namespace ADXETools.Model
