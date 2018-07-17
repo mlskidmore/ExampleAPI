@@ -43,9 +43,21 @@ namespace ADXETools.Model
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement]
+        [Required, XmlElement]
         public string CreatedBy { get; set; } = string.Empty;
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Required, XmlElement]
+        public string CreatedByUser { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Required, XmlElement]
+        public string LastUpdatedByUser { get; set; } = string.Empty;
+
         /// <summary>
         /// 
         /// </summary>
@@ -64,12 +76,6 @@ namespace ADXETools.Model
         [XmlElement]
         public string Id { get; set; } = string.Empty;
         
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlElement]
-        public string AttachmentDatetime { get; set; } = string.Empty;
-
         /// <summary>
         /// 
         /// </summary>
