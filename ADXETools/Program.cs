@@ -34,17 +34,17 @@ namespace ADXETools
         /// <returns></returns>
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-        .ConfigureAppConfiguration((context, builder) =>
-        {
-            builder.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-            builder.AddJsonFile($"appsettings.{context.HostingEnvironment}.json", optional: true);
-            builder.AddEnvironmentVariables();
-            if (context.HostingEnvironment.IsDevelopment())
-            {
-                builder.AddUserSecrets("ADXETools");
-            }
-        })
-        .UseStartup<Startup>()
-        .Build();
+                   .ConfigureAppConfiguration((context, builder) =>
+                    {
+                        builder.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                        builder.AddJsonFile($"appsettings.{context.HostingEnvironment}.json", optional: true);
+                        builder.AddEnvironmentVariables();
+                        if (context.HostingEnvironment.IsDevelopment())
+                        {
+                            builder.AddUserSecrets("ADXETools");
+                        }
+                    })
+                   .UseStartup<Startup>()
+                   .Build();
     }
 }
