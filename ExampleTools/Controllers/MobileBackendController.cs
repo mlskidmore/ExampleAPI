@@ -62,7 +62,7 @@ namespace ADXETools.Controllers.Mobile
         /// Adds event from mobile device
         /// </summary>
         [HttpPost("MobileBackEndAddAttEvent")]
-        [ProducesResponseType(typeof(MBESVRAddAttachmentRequest), 201)]
+        [ProducesResponseType(typeof(MBESVRAddAttEventRequest), 201)]
         public async Task<IActionResult> MobileBackEndAddAttEvent([FromBody] MBESVRAddAttEventRequest request)
         {
             try
@@ -84,8 +84,8 @@ namespace ADXETools.Controllers.Mobile
         /// Updates a vehicle from a mobile device
         /// </summary>
         [HttpPost("MobileBackEndUpdateVehicle")]
-        [ProducesResponseType(typeof(MBESVRAddAttachmentRequest), 201)]
-        [ApiExplorerSettings(GroupName = "Mobile")]
+        [ProducesResponseType(typeof(MBESVRUpdateVehicle), 201)]
+        //[ApiExplorerSettings(GroupName = "Mobile")]
         public async Task<IActionResult> MobileBackEndUpdateVehicle([FromBody] MBESVRUpdateVehicle request)
         {
             try

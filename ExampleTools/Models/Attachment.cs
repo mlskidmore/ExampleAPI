@@ -6,7 +6,7 @@ namespace ADXETools.Model
     /// <summary>
     /// 
     /// </summary>
-    [XmlRoot]
+    [XmlRoot(Namespace = "")]
     public class Attachment
     {
         /// <summary>

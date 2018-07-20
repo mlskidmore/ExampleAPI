@@ -10,7 +10,7 @@ namespace ADXETools.Model
     /// <summary>
     /// 
     /// </summary>
-    [XmlRoot]
+    [XmlRoot(Namespace ="")]
     public class MBESVRAddAttachmentRequest : ServiceInput
     {
         /// <summary>
@@ -21,8 +21,8 @@ namespace ADXETools.Model
         /// <summary>
         /// 
         /// </summary>
-        [BindNever, XmlAttribute, JsonIgnore]
-        public string Method { get; set; } = null;
+        //[BindNever, XmlAttribute, JsonIgnore]
+        //public string Method { get; set; } = null;
 
         /// <summary>
         /// 
@@ -44,7 +44,7 @@ namespace ADXETools.Model
         /// <summary>
         /// 
         /// </summary>
-        [Required, XmlArray]
+        [Required, XmlArrayItem("Attachment")]
         public List<Attachment> Attachments { get; set; } = null;
-    }
+    }    
 }
